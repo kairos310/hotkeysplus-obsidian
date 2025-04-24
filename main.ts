@@ -1,4 +1,5 @@
 import { Editor, MarkdownView, Plugin } from 'obsidian';
+import { start } from 'repl';
 
 interface VaultConfig {
   readableLineLength: boolean;
@@ -106,6 +107,17 @@ export default class HotkeysPlus extends Plugin {
           'readableLineLength',
           !this.app.vault.getConfig('readableLineLength'),
         ),
+    });
+    this.addCommand({
+      id: 'toggle-boxed',
+      name: 'Toggle Boxed',
+      callback: () => this.toggleBoxed(),
+      hotkeys: [
+        {
+          modifiers: ['Mod', 'Shift'],
+          key: 'x',
+        },
+      ],
     });
   }
 
@@ -276,6 +288,11 @@ export default class HotkeysPlus extends Plugin {
     return this.toggleElement(re, this.replaceEmbed);
   }
 
+  toggleBoxed() {
+    const re = /(\$\$\\boxed{|\$\$)([^$]+?)(}\$\$|\$\$)/gim;
+    return this.toggleElement(re, this.replaceBoxed);
+  }
+
   replaceListElement(
     match: string,
     spaces: string,
@@ -327,4 +344,19 @@ export default class HotkeysPlus extends Plugin {
       return spaces + '- [ ] ' + sentence;
     }
   }
+
+  replaceBoxed(
+    match: string,
+    startText: string,
+    sentence: string,
+    endText: string,
+  ){
+    if (startText === '$$\\boxed{') {
+      console.log(startText)
+      return '$$' + sentence + '$$';
+    } else if (startText === '$$') {
+      return '$$\\boxed{' + sentence + '}$$';
+    }
+  }
+  
 }
