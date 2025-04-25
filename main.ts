@@ -289,7 +289,7 @@ export default class HotkeysPlus extends Plugin {
   }
 
   toggleBoxed() {
-    const re = /(\$\$\\boxed{|\$\$)([^$]+?)(}\$\$|\$\$)/gim;
+    const re = /(\$\$\\boxed{)(.+?)}\$\$|\$\$(.+?)\$\$/gim;
     return this.toggleElement(re, this.replaceBoxed);
   }
 
@@ -349,13 +349,14 @@ export default class HotkeysPlus extends Plugin {
     match: string,
     startText: string,
     sentence: string,
-    endText: string,
+    sentence2: string,
   ){
     if (startText === '$$\\boxed{') {
       console.log(startText)
       return '$$' + sentence + '$$';
-    } else if (startText === '$$') {
-      return '$$\\boxed{' + sentence + '}$$';
+    } else {
+      console.log(sentence2)
+      return '$$\\boxed\{' + sentence2 + '\}$$';
     }
   }
   
